@@ -85,6 +85,7 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-bottom: 15px;
+  width: 100%;
 }
 
 .button.primary {
@@ -134,3 +135,6 @@ body {
   line-height: 1.6;
 }
 
+.submit {
+  margin-top: 30px;
+}

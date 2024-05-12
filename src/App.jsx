@@ -16,7 +16,7 @@ const App = () => {
   const [synthesizing, setSynthesizing] = useState(false);
 
   const recorderControls = useAudioRecorder();
-
+ 
   const fetchTextFromAI = async () => {
     setLoading(true);
 
@@ -159,14 +159,23 @@ const App = () => {
         <h1 className="title">pronouncing skills</h1>
 
         <div className="recorder">
-          <AudioRecorder 
-            onRecordingComplete={handleRecordingComplete} 
+          <AudioRecorder
+            onRecordingComplete={handleRecordingComplete}
             recorderControls={recorderControls}
             className="audio-recorder"
           />
         </div>
-        <button 
-          className="button primary sumbmit"
+
+        {audioBlob && ( 
+          <ReactAudioPlayer 
+            src={URL.createObjectURL(audioBlob)} 
+            controls
+            className="audio-player"
+          />
+        )}
+
+        <button
+          className="button primary submit"
           onClick={handleAudioSubmit}
           disabled={!audioBlob || audioSubmitLoading}
         >
