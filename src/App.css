@@ -2,59 +2,135 @@ body {
   background-color: #1c1c1c;
   color: #ffffff;
   font-family: 'Roboto', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.banner {
+  background-color: #ffff;
+  color: #9575cd;
+  padding: 20px; 
+  text-align: center;
+  border-radius: 10px;
+}
+
+.app-title {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.app-slogan {
+  font-size: 1.2rem;
 }
 
 .container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
+  background-color: #262626;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.recorder {
+  width: 100%;
+  margin: auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  flex-direction: column;
+}
+
+.content {
+  margin-bottom: 100px;
 }
 
 .title {
-  font-size: 24px;
-  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #9575cd;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 20px;
+  text-align: left;
 }
 
 .label {
-  display: block;
-  margin-bottom: 10px;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  color: #bdbdbd;
 }
 
 .input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  padding: 12px;
+  font-size: 1rem;
   border: 1px solid #8a8a8a;
   border-radius: 5px;
+  background-color: #333333;
+  color: #ffffff;
 }
 
 .button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: #9575cd;
-  color: #ffffff;
+  padding: 12px 20px;
+  font-size: 1.1rem;
   border: none;
   border-radius: 5px;
-  font-size: 16px;
-  margin-top: 10px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 15px;
 }
 
-.text {
+.button.primary {
+  background-color: #9575cd;
+  color: #ffffff;
+}
+
+.button.danger {
+  background-color: #e57373;
+  color: #ffffff;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.generated-text {
   margin-top: 20px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.audio-recorder {
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .response {
-  margin-top: 20px;
+  margin-top: 30px;
+  text-align: left;
 }
 
 .response-title {
-  font-size: 20px;
+  font-size: 1.8rem;
   margin-bottom: 10px;
+  color: #bdbdbd;
 }
 
 .response-text {
-  font-size: 16px;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
+

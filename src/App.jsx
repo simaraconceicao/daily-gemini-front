@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
+import ReactAudioPlayer from 'react-audio-player';
+import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
 import './App.css';
 
@@ -7,9 +9,11 @@ const App = () => {
   const [theme, setTheme] = useState('');
   const [text, setText] = useState('');
   const [audioBlob, setAudioBlob] = useState(null);
-  const [recording, setRecording] = useState(false);
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
+  const [audioSubmitLoading, setAudioSubmitLoading] = useState(false);
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [synthesizing, setSynthesizing] = useState(false);
 
   const recorderControls = useAudioRecorder();
 
@@ -20,7 +24,7 @@ const App = () => {
       const response = await axios.post('https://us-central1-chat-ai-416420.cloudfunctions.net/daily/theme', {
         theme: theme,
       });
-  
+
       if (response.data && response.data.candidates && response.data.candidates.length > 0) {
         const text = response.data.candidates[0].content.parts[0].text;
         setText(text);
@@ -30,16 +34,16 @@ const App = () => {
     } catch (error) {
       console.error('Error fetching text from AI:', error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   const handleAudioSubmit = async () => {
-    setLoading(true);
+    setAudioSubmitLoading(true); 
 
     if (!audioBlob) {
       console.error('No audio blob to submit');
-      setLoading(false);
+      setAudioSubmitLoading(false); 
       return;
     }
 
@@ -47,14 +51,13 @@ const App = () => {
       const audioFile = new File([audioBlob], 'recording.webm', { type: 'audio/webm' });
       const arrayBuffer = await audioFile.arrayBuffer();
       const base64Audio = btoa(
-        new Uint8Array(arrayBuffer)
-          .reduce((data, byte) => data + String.fromCharCode(byte), '')
+        new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
       );
 
       const data = {
         "audio": {
           "inlineData": {
-            "mimeType": "audio/webm", 
+            "mimeType": "audio/webm",
             "data": base64Audio
           }
         }
@@ -71,7 +74,7 @@ const App = () => {
     } catch (error) {
       console.error('Error submitting audio to AI:', error);
     } finally {
-      setLoading(false);
+      setAudioSubmitLoading(false); 
     }
   };
 
@@ -81,11 +84,6 @@ const App = () => {
 
   const handleRecordingComplete = (blob) => {
     setAudioBlob(blob);
-    setRecording(false);
-  };
-
-  const handleRecordingStatusChange = (status) => {
-    setRecording(status === 'recording');
   };
 
   const handleClearState = () => {
@@ -93,37 +91,103 @@ const App = () => {
     setText('');
     setAudioBlob(null);
     setResponse('');
-  };
+    setAudioUrl(null);
+  }
+  
+  useEffect(() => {
+    const synthesizeAudio = async () => {
+      if (text) {
+        setSynthesizing(true);
+        try {
+          const response = await axios.post('https://us-central1-chat-ai-416420.cloudfunctions.net/daily/synthesize', {
+            text: text,
+          });
+
+          if (response.data && response.data.data) {
+            const audioContent = response.data.data; 
+            const blob = new Blob([new Uint8Array(audioContent)], { type: 'audio/mpeg' }); // Adjust type if needed
+            setAudioUrl(URL.createObjectURL(blob));
+          } else {
+            console.error('No audio content found in response');
+          }
+
+        } catch (error) {
+          console.error('Error synthesizing audio:', error);
+        } finally {
+          setSynthesizing(false);
+        }
+      }
+    };
+
+    synthesizeAudio();
+  }, [text]);
 
   return (
     <div className="container">
-      <h1 className="title">My Daily Practice</h1>
-      <label className="label">
-        Theme:
-        <input className="input" type="text" value={theme} onChange={handleThemeChange} />
-      </label>
-      <button className="button" onClick={fetchTextFromAI} disabled={loading}>Generate Text</button>
-      {loading && <p>Loading...</p>} 
-      <p className="text">{text}</p>
+      <div className="banner">
+        <h1 className="app-title">WordUp</h1>
+        <p className="app-slogan">Minutes a Day, Fluent for Life</p>
+      </div>
+      <div className="content">
+        <h1 className="title">written comprehension</h1>
 
-      <AudioRecorder 
-        onRecordingComplete={handleRecordingComplete}
-        handleStatusChange={handleRecordingStatusChange} 
-        recorderControls={recorderControls}
-      />
-      <button className="button" onClick={handleAudioSubmit} disabled={!audioBlob || loading || recording}>
-        Submit Audio
-      </button>
-
-      {response && (
-        <div className="response">
-          <h2 className="response-title">AI Response:</h2>
-          <p className="response-text">{response}</p>
+        <div className="input-group">
+          <label htmlFor="theme" className="label">
+            Topic:
+          </label>
+          <input type="text" id="theme" className="input" value={theme} onChange={handleThemeChange} />
         </div>
-      )}
 
-      <button className="button" onClick={handleClearState}>Clear State</button>
+        <button className="button primary" onClick={fetchTextFromAI} disabled={loading}>
+          {loading ? 'Generating...' : 'Generate Text'}
+        </button>
+
+        {text && <p className="generated-text">{text}</p>}
+      </div>
+      
+      <div className="content">
+        <h1 className="title">oral comprehension</h1>
+        {synthesizing && <p>Synthesizing audio...</p>}
+        <ReactAudioPlayer
+          src={audioUrl}
+          controls
+          disabled={synthesizing}
+        />
+      </div>
+
+      <div className="content">
+        <h1 className="title">pronouncing skills</h1>
+
+        <div className="recorder">
+          <AudioRecorder 
+            onRecordingComplete={handleRecordingComplete} 
+            recorderControls={recorderControls}
+            className="audio-recorder"
+          />
+        </div>
+        <button 
+          className="button primary sumbmit"
+          onClick={handleAudioSubmit}
+          disabled={!audioBlob || audioSubmitLoading}
+        >
+          {audioSubmitLoading ? 'Submitting...' : 'Submit Audio'}
+        </button>
+
+        {response && (
+          <div className="response">
+            <h2 className="response-title">AI Response:</h2>
+            <ReactMarkdown className="response-text">{response}</ReactMarkdown> 
+          </div>
+        )}
+      </div>
+      <div>
+        <button className="button danger" onClick={handleClearState}>
+          Clear All
+        </button>
+      </div>
+
     </div>
+    
   );
 };
 

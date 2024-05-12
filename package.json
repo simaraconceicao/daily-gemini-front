@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google-cloud/text-to-speech": "^5.2.0",
     "@google-cloud/vertexai": "^1.1.0",
     "axios": "^1.6.8",
+    "fs": "^0.0.1-security",
     "react": "^18.2.0",
+    "react-audio-player": "^0.17.0",
     "react-audio-voice-recorder": "^2.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
