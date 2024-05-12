@@ -1,0 +1,60 @@
+body {
+  background-color: #1c1c1c;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+}
+
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #8a8a8a;
+  border-radius: 5px;
+}
+
+.button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #9575cd;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.text {
+  margin-top: 20px;
+}
+
+.response {
+  margin-top: 20px;
+}
+
+.response-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.response-text {
+  font-size: 16px;
+}
