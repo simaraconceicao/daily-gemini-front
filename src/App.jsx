@@ -21,7 +21,7 @@ const App = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('https://us-central1-chat-ai-416420.cloudfunctions.net/daily/theme', {
+      const response = await axios.post('https://daily-773267354023.us-central1.run.app/theme', {
         theme: theme,
       });
 
@@ -63,7 +63,7 @@ const App = () => {
         }
       };
 
-      const response = await axios.post('https://us-central1-chat-ai-416420.cloudfunctions.net/daily/audio', data);
+      const response = await axios.post('https://daily-773267354023.us-central1.run.app/audio', data);
 
       if (response.data && response.data.candidates && response.data.candidates.length > 0) {
         const text = response.data.candidates[0].content.parts[0].text;
@@ -99,13 +99,13 @@ const App = () => {
       if (text) {
         setSynthesizing(true);
         try {
-          const response = await axios.post('https://us-central1-chat-ai-416420.cloudfunctions.net/daily/synthesize', {
+          const response = await axios.post('https://daily-773267354023.us-central1.run.app/synthesize', {
             text: text,
           });
 
           if (response.data && response.data.data) {
             const audioContent = response.data.data; 
-            const blob = new Blob([new Uint8Array(audioContent)], { type: 'audio/mpeg' }); // Adjust type if needed
+            const blob = new Blob([new Uint8Array(audioContent)], { type: 'audio/mpeg' });
             setAudioUrl(URL.createObjectURL(blob));
           } else {
             console.error('No audio content found in response');
